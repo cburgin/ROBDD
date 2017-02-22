@@ -89,5 +89,5 @@ ENV/
 .ropeproject
 
 # Graphviz Output
-.dot
-.png
+*.dot
+*.png
