@@ -10,7 +10,7 @@ from operators import Operators
 class Robdd:
     """ROBDD implementation using python 3.5"""
 
-    def __init__(self, expression, num_vars):
+    def __init__(self, num_vars):
 
         # Create data structures and vars for ROBDD
         self.num_vars = num_vars
@@ -19,15 +19,14 @@ class Robdd:
         # Init T and H
         self.init_T()
         self.init_H()
-        self.build(expression, 1)
 
     # Implementation of the init(T) function
     def init_T(self):
         self.T = 2 * [3 * [None]]
         # Initilize the 0 and 1 node
         # They are constructed this way so that they have unique hash values
-        self.T[0] = [self.num_vars+1, -1, None]
-        self.T[1] = [self.num_vars+1, None, -1]
+        self.T[0] = [self.num_vars+1, -1, -1]
+        self.T[1] = [self.num_vars+1, -2, -2]
         self.num_nodes = 2
 
     def init_H(self):
@@ -68,7 +67,7 @@ class Robdd:
         self.H.append(hash(str(i)+str(l)+str(h)))
 
     # Constructs an ROBDD from a given function
-    def build(self, expr, i):
+    def build(self, expr, i=1):
         if i > self.num_vars:
             return int(eval(self.convert_expr(expr)))
         else:
@@ -78,7 +77,9 @@ class Robdd:
 
     # Does the Shannon Expansion needed for build
     def build_sub_expr(self, expr, var, val):
-        return expr.replace("x"+str(var), str(val))
+        expr =  expr.replace("x"+str(var)+",", str(val)+",")
+        return expr.replace("x"+str(var)+")", str(val)+")")
+
 
     # Convert input expression into a form I can evaluate
     def convert_expr(self, expr):
@@ -89,6 +90,14 @@ class Robdd:
         expr = expr.replace("Implies", "Operators.Implies")
         expr = expr.replace("Equal", "Operators.Equal")
         return expr
+
+    # Get ROBDD table T
+    def get_T(self):
+        return self.T
+
+    #Get the number of nodes in the ROBDD
+    def get_num_nodes(self):
+        return self.num_nodes
 
     # Prints the current state
     def print_robdd(self):
