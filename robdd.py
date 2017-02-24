@@ -99,6 +99,9 @@ class Robdd:
     def get_num_nodes(self):
         return self.num_nodes
 
+    def get_num_vars(self):
+        return self.num_vars
+
     # Prints the current state
     def print_robdd(self):
         print("\nCurrent state of T")
@@ -113,7 +116,7 @@ class Robdd:
 
         print("\n")
 
-    def print_graph(self):
+    def print_graph(self, name):
         parts = ["digraph", "robdd", "{"]
         # Create the nodes
         for node in self.T:
@@ -136,9 +139,9 @@ class Robdd:
         file_contents = " ".join(parts)
 
         # Write to file
-        with open("robdd.dot", 'w') as f:
+        with open(name+".dot", 'w') as f:
             f.write(file_contents)
-        check_call(['dot','-Tpng','robdd.dot','-o','robdd.png'])
+        check_call(['dot', '-Tpng', name+'.dot', '-o', name+'.png'])
 
     # Returns the node ID
     def id(self, node):
