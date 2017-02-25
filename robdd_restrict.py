@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-# Perform an operation on two ROBDD's
+# Colin Burgin
+
+# Perform restriction on an ROBDD, Inherits from ROBDD base class
 
 from robdd import Robdd
 
@@ -26,12 +28,14 @@ class Robdd_restrict(Robdd):
         self.init_T()
         self.init_H()
 
+    # Really just setup that shouldn't be apart of the recursion
     def restrict(self, j, b):
         self.j = j
         self.b = b
 
         self.res(self.r_nodes-1)
 
+    # Recursive function that performs the restriction
     def res(self, u):
         a_i, a_l, a_h = self.curr_T[u]
         # Make sure the node is not already restricted
@@ -53,6 +57,7 @@ class Robdd_restrict(Robdd):
             else:
                 self.r[u] = True
                 return self.res(a_h)
+
 
     def buildR(self, u):
         if (u is 1) or (u is 0):

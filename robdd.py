@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Colin Burgin
+
 # Parse a Boolean Expression
 
 from graphviz import Digraph
@@ -29,6 +31,7 @@ class Robdd:
         self.T[1] = [self.num_vars+1, -2, -2]
         self.num_nodes = 2
 
+    # Hash table for efficent look up
     def init_H(self):
         self.H = 2 * [None]
         self.H[0] = hash(str(self.T[0][0])+str(self.T[0][1])+str(self.T[0][2]))
@@ -85,6 +88,7 @@ class Robdd:
     def convert_expr(self, expr):
         # Replace all of the operators with my class operators
         expr = expr.replace("~", "not ")
+        expr = expr.replace("Not", "not ")
         expr = expr.replace("And", "Operators.And")
         expr = expr.replace("Or", "Operators.Or")
         expr = expr.replace("Implies", "Operators.Implies")
@@ -95,14 +99,19 @@ class Robdd:
     def get_T(self):
         return self.T
 
-    #Get the number of nodes in the ROBDD
+    # Get the number of nodes in the ROBDD
     def get_num_nodes(self):
         return self.num_nodes
 
+    # Get the number of unique variables
     def get_num_vars(self):
         return self.num_vars
 
-    # Prints the current state
+    # Returns the node ID
+    def id(self, node):
+        return self.lookup(node[0], node[1], node[2])
+
+    # Prints the current state of the table T
     def print_robdd(self):
         print("\nCurrent state of T")
         for i in range(0, self.num_nodes):
@@ -116,6 +125,7 @@ class Robdd:
 
         print("\n")
 
+    # Prints the ROBDD graph using GraphViz
     def print_graph(self, name):
         parts = ["digraph", "robdd", "{"]
         # Create the nodes
@@ -142,7 +152,3 @@ class Robdd:
         with open(name+".dot", 'w') as f:
             f.write(file_contents)
         check_call(['dot', '-Tpng', name+'.dot', '-o', name+'.png'])
-
-    # Returns the node ID
-    def id(self, node):
-        return self.lookup(node[0], node[1], node[2])
